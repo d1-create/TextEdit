@@ -1,0 +1,85 @@
+#import default necessities for pyside6
+from PySide6.QtWidgets import *
+from PySide6.QtGui import *
+from PySide6.QtCore import *
+
+from PySide6.QtUiTools import *
+
+import sys
+
+from ui.main_window import Ui_MainWindow#import the ui
+
+#the main class for the whole application
+class MainWindow(QMainWindow,Ui_MainWindow):
+    def __init__(self):
+        super(MainWindow,self).__init__()
+        
+        Ui_MainWindow.setupUi(self,self)
+
+        self.SetupVariables()
+        self.SetupStyling()
+        self.SetupMenu()
+        self.SetupFunctionality()
+    
+    #setup the menu (toolbar,shortcuts,actions,ect)
+    def SetupMenu(self):
+        self.actionSave.setShortcut("Ctrl+Shift+S")
+        self.actionSave_As.setShortcut("Ctrl+S")
+        self.actionExit.setShortcut("Ctrl+X")
+        
+        self.actionExit.triggered.connect(lambda: self.ActionMethods.ExitApplication(app))
+    
+    #setup other signals and slots (other than menubar)
+    def SetupFunctionality(self):
+        #yes an extra-long function for no reason
+        self.TextInput.textChanged.connect(lambda: self.UpdateText())
+    #setup all variables     
+    def SetupVariables(self):
+        #constants
+        self.TEXTBOLDNESS:int = 500
+        self.TEXTSIZE:int = 10
+        self.TEXTFONT:str = "Comic Sans"
+        
+        #vars made of constants
+        self.main_font = QFont(self.TEXTFONT,self.TEXTSIZE,self.TEXTBOLDNESS)
+        #data
+        self.text_data:str = ""
+        
+        self.text_chars:int = 0
+        self.text_words:int = 0
+
+    #setup styling
+    def SetupStyling(self):
+        self.TextInput.setFont(self.main_font)
+        self.TextInput.setStyleSheet("""margin:0px;padding:0px;""")
+    
+    #############SIGNALS AND SLOTS HERE(No need for any actual seperation of code so its a system of comments)#############
+    
+    class ActionMethods:
+        def ExitApplication(app:QApplication):
+            app.exit()
+        
+    ##UpdateText##
+    def UpdateText(self):
+        self.text_data = self.TextInput.toPlainText()
+        self.GetCharWord()
+        self.SetCharWord()
+    #GetAndSetCharDetails - ##UpdateText     
+    def GetCharWord(self):
+        self.text_chars = len(self.text_data)
+        self.text_words = len(self.text_data.split())
+    def SetCharWord(self):
+        self.chars_label.setText(f"Charachters: {str(self.text_chars)}")
+        self.words_label.setText(f"Words: {str(self.text_words)}")
+    
+    
+    ##UpdateTextEND##
+    
+    
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    
+    window = MainWindow()
+    window.show()
+    
+    app.exec()
