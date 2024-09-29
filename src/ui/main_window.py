@@ -17,8 +17,8 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLabel, QMainWindow,
-    QMenu, QMenuBar, QSizePolicy, QStatusBar,
-    QTextEdit, QVBoxLayout, QWidget)
+    QMenu, QMenuBar, QPlainTextEdit, QSizePolicy,
+    QStatusBar, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -35,10 +35,22 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.TextInput = QTextEdit(self.centralwidget)
-        self.TextInput.setObjectName(u"TextInput")
+        self.InputTextContainer = QHBoxLayout()
+        self.InputTextContainer.setObjectName(u"InputTextContainer")
+        self.LineNum = QPlainTextEdit(self.centralwidget)
+        self.LineNum.setObjectName(u"LineNum")
+        self.LineNum.setMaximumSize(QSize(50, 16777215))
+        self.LineNum.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
-        self.verticalLayout.addWidget(self.TextInput)
+        self.InputTextContainer.addWidget(self.LineNum)
+
+        self.InputText = QPlainTextEdit(self.centralwidget)
+        self.InputText.setObjectName(u"InputText")
+
+        self.InputTextContainer.addWidget(self.InputText)
+
+
+        self.verticalLayout.addLayout(self.InputTextContainer)
 
         self.Infobar = QWidget(self.centralwidget)
         self.Infobar.setObjectName(u"Infobar")
@@ -99,6 +111,7 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
         self.actionSave_As.setText(QCoreApplication.translate("MainWindow", u"Save As", None))
         self.actionExit.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
+        self.InputText.setPlainText(QCoreApplication.translate("MainWindow", u"a", None))
         self.chars_label.setText(QCoreApplication.translate("MainWindow", u"Charachters:", None))
         self.words_label.setText(QCoreApplication.translate("MainWindow", u"Words:", None))
         self.menuSave.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
