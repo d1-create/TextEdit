@@ -17,12 +17,31 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
         Ui_MainWindow.setupUi(self,self)
 
+        self.system_counter = 0 #a counter for all tasks (e.g syscounter%3==0: then do stuff usees 1/3 performance)
+
+        #setup scrollbars
+        self.linenumsb = self.LineNum.verticalScrollBar()
+        self.textinputsb = self.InputText.verticalScrollBar()
+        self.linenumsb.setVisible(False)
+
+        #other functions
         self.SetupVariables()
         self.SetupStyling()
         self.SetupMenu()
         self.SetupFunctionality()
+        
+        
+        self.SetupTimers()
+        
+    def SetupTimers(self):
 
-    #setup the menu (toolbar,shortcuts,actions,ect)
+                
+        sbcountertimer = QTimer(self)
+        sbcountertimer.setTimerType(Qt.TimerType.PreciseTimer)
+        sbcountertimer.start(2)
+        sbcountertimer.timeout.connect(lambda: self.CheckIfSbMoved())
+        
+    #setup the menu (toolbar,shortcuts,actions,etc)
     def SetupMenu(self):
         self.actionSave.setShortcut("Ctrl+Shift+S")
         self.actionSave_As.setShortcut("Ctrl+S")
@@ -34,10 +53,9 @@ class MainWindow(QMainWindow,Ui_MainWindow):
 
     #setup other signals and slots (other than menubar)
     def SetupFunctionality(self):
-        #yes an extra-long function for no reason
-        self.TextInput.textChanged.connect(lambda: self.UpdateText())
     #setup all variables     
         self.InputText.textChanged.connect(lambda: self.UpdateText())
+    
     #setup all variables(comments for non-self explanator stuff)
     def SetupVariables(self):
         #constants
@@ -62,8 +80,6 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         
     #setup styling
     def SetupStyling(self):
-        self.TextInput.setFont(self.main_font)
-        self.TextInput.setStyleSheet("""margin:0px;padding:0px;""")
         self.InputText.setFont(self.main_font)
         self.InputTextContainer.layout().setSpacing(0)
 
@@ -71,20 +87,16 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.LineNum.ensureCursorVisible()
         self.LineNum.setFont(self.main_font)
     #############SIGNALS AND SLOTS HERE(No need for any actual seperation of code so its a system of comments)#############
-    
-    class ActionMethods:
-        def ExitApplication(app:QApplication):
-            app.exit()
 
     ##UpdateText##
     ##UpdateText(anything to do with updating text)##
     def UpdateText(self):
-        self.text_data = self.TextInput.toPlainText()
         self.text_data = self.InputText.toPlainText()
         self.text_lines = len(self.text_data.splitlines())
         self.UpdateLineCount()
         self.GetCharWord()
         self.SetCharWord()
+        self.UpdateScrollBars()
     #GetAndSetCharDetails - ##UpdateText     
     def GetCharWord(self):
         self.text_chars = len(self.text_data)
@@ -101,9 +113,6 @@ class MainWindow(QMainWindow,Ui_MainWindow):
             
         self.LineNum.setPlainText(self.line_data)
 
-    
-        newsb = self.LineNum.verticalScrollBar()
-        newsb.setValue(newsb.maximum())
     ##UpdateTextEND##
 
     ##SAVEBUTTONS START(anything to do with menu)##
@@ -115,9 +124,24 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         File.write(self.text_data)
         File.close()
     ##SAVEBUTTONS END##
-  
+    
+    ##SCROLLBARS##
+    def CheckIfSbMoved(self):
+        self.UpdateScrollBars()
+                
+    def UpdateScrollBars(self):
+        self.linenumsb.setValue(self.GetSbPercentage()*self.linenumsb.maximum())
+
+        
+    def GetSbPercentage(self):
+        if(self.textinputsb.value())
+            return ((self.textinputsb.value()/self.textinputsb.maximum())*100)
+        #else:
+        #    return None
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     window = MainWindow()
     window.show()
+    
+    app.exec()
