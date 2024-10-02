@@ -6,7 +6,12 @@ from PySide6.QtCore import *
 from PySide6.QtUiTools import *
 import sys
 
+#modules
 from ui.main_window import Ui_MainWindow#import the ui
+
+from modules.consts import *
+from modules.scrollbar import *
+from modules.textupdates import *
 
 #other libs
 import pathlib
@@ -30,16 +35,7 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.SetupMenu()
         self.SetupFunctionality()
         
-        
-        self.SetupTimers()
-        
-    def SetupTimers(self):
 
-                
-        sbcountertimer = QTimer(self)
-        sbcountertimer.setTimerType(Qt.TimerType.PreciseTimer)
-        sbcountertimer.start(2)
-        sbcountertimer.timeout.connect(lambda: self.CheckIfSbMoved())
         
     #setup the menu (toolbar,shortcuts,actions,etc)
     def SetupMenu(self):
@@ -47,24 +43,18 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.actionSave_As.setShortcut("Ctrl+S")
         self.actionExit.setShortcut("Ctrl+X")
 
-        self.actionExit.triggered.connect(lambda: self.ActionMethods.ExitApplication(app))
-        self.actionExit.triggered.connect(lambda: app.exit())
-        self.actionSave_As.triggered.connect(lambda: self.SaveAsFunction())
-
+    
     #setup other signals and slots (other than menubar)
     def SetupFunctionality(self):
-    #setup all variables     
-        self.InputText.textChanged.connect(lambda: self.UpdateText())
-    
+        self.InputText.textChanged.connect(lambda: UpdateText(self.InputText,self.LineNum,self.text_data,self.text_chars,self.text_words,self.text_lines,self.chars_label,self.words_label))
+        self.textinputsb.valueChanged.connect(lambda: SyncroniseScrollBars(self.linenumsb,self.textinputsb))
+
+
     #setup all variables(comments for non-self explanator stuff)
     def SetupVariables(self):
-        #constants
-        self.TEXTBOLDNESS:int = 500
-        self.TEXTSIZE:int = 10
-        self.TEXTFONT:str = "Comic Sans"
 
         #vars made of constants
-        self.main_font = QFont(self.TEXTFONT,self.TEXTSIZE,self.TEXTBOLDNESS)
+        self.main_font = QFont(TEXTFONT,TEXTSIZE,TEXTBOLDNESS)
         #data
         self.text_data:str = ""
         self.line_data:str = ""#string to put next to main textbox to show line number
@@ -86,58 +76,9 @@ class MainWindow(QMainWindow,Ui_MainWindow):
         self.LineNum.setDisabled(True)
         self.LineNum.ensureCursorVisible()
         self.LineNum.setFont(self.main_font)
-    #############SIGNALS AND SLOTS HERE(No need for any actual seperation of code so its a system of comments)#############
 
-    ##UpdateText##
-    ##UpdateText(anything to do with updating text)##
-    def UpdateText(self):
-        self.text_data = self.InputText.toPlainText()
-        self.text_lines = len(self.text_data.splitlines())
-        self.UpdateLineCount()
-        self.GetCharWord()
-        self.SetCharWord()
-        self.UpdateScrollBars()
-    #GetAndSetCharDetails - ##UpdateText     
-    def GetCharWord(self):
-        self.text_chars = len(self.text_data)
-        self.text_words = len(self.text_data.split())
-    def SetCharWord(self):
-        self.chars_label.setText(f"Charachters: {str(self.text_chars)}")
-        self.words_label.setText(f"Words: {str(self.text_words)}")
-    #Update Line Count
-    def UpdateLineCount(self):
-        self.line_data = ""
-        line_arr = list(range(0,int(self.text_lines)))
-        for i in line_arr:
-            self.line_data += str(i) + "\n"
-            
-        self.LineNum.setPlainText(self.line_data)
 
-    ##UpdateTextEND##
 
-    ##SAVEBUTTONS START(anything to do with menu)##
-    def SaveAsFunction(self):
-        pass
-
-    def SaveToFile(self):
-        File = open(self.file_path,"w")
-        File.write(self.text_data)
-        File.close()
-    ##SAVEBUTTONS END##
-    
-    ##SCROLLBARS##
-    def CheckIfSbMoved(self):
-        self.UpdateScrollBars()
-                
-    def UpdateScrollBars(self):
-        self.linenumsb.setValue(self.GetSbPercentage()*self.linenumsb.maximum())
-
-        
-    def GetSbPercentage(self):
-        if(self.textinputsb.value())
-            return ((self.textinputsb.value()/self.textinputsb.maximum())*100)
-        #else:
-        #    return None
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
