@@ -19,8 +19,8 @@ def UpdateText(MainTextBox:QPlainTextEdit,LineNumTextBox:QPlainTextEdit,text_dat
     text_lines = len(text_data.splitlines())
     
     #update label values
-    char_label.setText(str(text_chars))
-    word_label.setText(str(text_words))
+    char_label.setText(f"Chars: {str(text_chars)}")
+    word_label.setText(f"Words: {str(text_words)}")
     #update lines
     
     UpdateLineCount(LineNumTextBox,text_data)
