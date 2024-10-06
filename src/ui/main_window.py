@@ -31,6 +31,9 @@ class Ui_MainWindow(object):
         self.actionSave_As.setObjectName(u"actionSave_As")
         self.actionExit = QAction(MainWindow)
         self.actionExit.setObjectName(u"actionExit")
+        self.actionLight_Mode = QAction(MainWindow)
+        self.actionLight_Mode.setObjectName(u"actionLight_Mode")
+        self.actionLight_Mode.setCheckable(True)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -96,6 +99,7 @@ class Ui_MainWindow(object):
         self.menuSave.addAction(self.actionSave)
         self.menuSave.addAction(self.actionSave_As)
         self.menuSave.addAction(self.actionExit)
+        self.menuAppearance.addAction(self.actionLight_Mode)
 
         self.retranslateUi(MainWindow)
 
@@ -110,6 +114,7 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
         self.actionSave_As.setText(QCoreApplication.translate("MainWindow", u"Save As", None))
         self.actionExit.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
+        self.actionLight_Mode.setText(QCoreApplication.translate("MainWindow", u"Light Mode", None))
         self.InputText.setPlainText(QCoreApplication.translate("MainWindow", u"a", None))
         self.chars_label.setText(QCoreApplication.translate("MainWindow", u"Charachters:", None))
         self.words_label.setText(QCoreApplication.translate("MainWindow", u"Words:", None))

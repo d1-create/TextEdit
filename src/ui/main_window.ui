@@ -96,6 +96,7 @@
     <property name="title">
      <string>Appearance</string>
     </property>
+    <addaction name="actionLight_Mode"/>
    </widget>
    <addaction name="menuSave"/>
    <addaction name="menuEditg"/>
@@ -118,6 +119,14 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionLight_Mode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Light Mode</string>
    </property>
   </action>
  </widget>

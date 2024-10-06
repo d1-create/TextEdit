@@ -1,34 +1,29 @@
-from PySide6.QtWidgets import *
-from PySide6.QtGui import *
-from PySide6.QtCore import *
+from PySide6.QtWidgets import QErrorMessage,QFileDialog
 
 import pathlib
-import os 
+import os
+
+from data import MAIN_DATA_STORE as Data
 #save a string to a file if it is allowed to save and a file is open
-def SaveStrToFile(current_path:str,text_to_write:str,is_file_open:bool,can_save:bool):
-    if((is_file_open==True) and (can_save==True)):
-        file = open(current_path,"w")
-        file.write(text_to_write)
-        file.close()
+def SaveToFile():
+    print(Data.file_path)
+    print(Data.text_data)
+    if(Data.file_path!="None" and Data.text_data!=""):
+        with open(Data.file_path,"w") as file:
+            file.write(Data.text_data)
     else:
         Show_Basic_Error_Dialog("A file must be open to save it!")
 
 #save file as new one as long as text data is not empty
-def Save_File_As(text_to_write:str,current_file_path:str,current_file_name:str,is_file_open:bool):
-    print(text_to_write)
-    file = None
+def Save_File_As():
     filedialogresult = QFileDialog.getSaveFileName(None,'Save File As',str(pathlib.Path.home()))
-    
-    current_file_path = filedialogresult[0]
-    
-    file = open(current_file_path,'w')
-    print(text_to_write)
-    file.write(text_to_write)
-    
+
+    Data.file_path = filedialogresult[0]
+
+    with open(Data.file_path,'w') as file:
+        file.write(Data.text_data)
+
     is_file_open = True
-    current_file_name = os.path.basename(current_file_path)
-    
-    file.close()
 
 #show error
 def Show_Basic_Error_Dialog(message:str):
